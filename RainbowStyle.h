@@ -278,7 +278,7 @@ public:
         pDC->FillSolidRect(rectCaption, RGB(0x1e,0x9c,0xe2));
 
         // This is the color of controls on the ribbon
-        return RGB(0x44,0x8b,0x9f);
+        return RGB(0x66,0x52,0x20);
     }
 
     // this is the caption at the bottom on each panel
