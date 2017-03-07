@@ -16,7 +16,6 @@
 #include "RibbonExample.h"
 
 #include "MainFrm.h"
-#include "VisualStyle.h"
 #include "Windows10Style.h"
 
 #ifdef _DEBUG

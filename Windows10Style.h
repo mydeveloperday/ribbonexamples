@@ -4,6 +4,8 @@ class CWindows10Style : public CMFCVisualManagerOffice2007
 {
     DECLARE_DYNCREATE(CWindows10Style);
 
+    CMFCToolBarImages m_uiElements;
+
 private:
     CWindows10Style();
 
@@ -86,6 +88,7 @@ public:
         CRect rect
     )
     {
+        static_cast<void>(pPanel);
         pDC->FillSolidRect(rect, m_clrWindows10Bar);
     }
 
@@ -94,6 +97,7 @@ public:
         CMFCRibbonMainPanel* pPanel,
         CRect rect)
     {
+        static_cast<void>(rect);
         pDC->FillSolidRect(pPanel->GetRect(), RGB(0xFE, 0xFE, 0xFF));
     }
 
@@ -103,6 +107,7 @@ public:
         CMFCRibbonMainPanel* pPanel,
         CRect rect)
     {
+        static_cast<void>(pPanel);
         pDC->FillSolidRect(rect, RGB(0xFF, 0, 0));
     }
 
@@ -114,7 +119,19 @@ public:
         {
             // RHS of recent files does not have large icons
             if (pButton->IsLargeImage()) {
-                pDC->FillSolidRect(pButton->GetRect(), RGB(0xFB, 0xFC, 0xFD));
+                if (pButton->IsHighlighted()) {
+                    // #EDF4FC
+                    pDC->FillSolidRect(pButton->GetRect(), RGB(0xED, 0xF4, 0xFC));
+
+                    // #A8D2FD
+                    CPen pen(PS_SOLID, 1, RGB(0xA8, 0xD2, 0xFD));
+                    pDC->SelectObject(pen);
+                    pDC->SelectStockObject(NULL_BRUSH);
+                    pDC->Rectangle(pButton->GetRect());
+                }
+                else {
+                    pDC->FillSolidRect(pButton->GetRect(), RGB(0xFB, 0xFC, 0xFD));
+                }
                 return GetSysColor(COLOR_WINDOWTEXT);
             }
         }
@@ -127,6 +144,85 @@ public:
     {
         pDC->FillSolidRect(rect, m_clrWindows10Bar);
         return GetSysColor(COLOR_WINDOWTEXT);
+    }
+
+    virtual COLORREF GetMenuItemTextColor(
+        CMFCToolBarMenuButton* pButton,
+        BOOL bHighlighted,
+        BOOL bDisabled) override
+    {
+        static_cast<void>(pButton);
+        static_cast<void>(bHighlighted);
+        static_cast<void>(bDisabled);
+        return GetSysColor(COLOR_MENUTEXT);
+    }
+
+    virtual void OnHighlightMenuItem(
+        CDC* pDC,
+        CMFCToolBarMenuButton* pButton,
+        CRect rect,
+        COLORREF& clrText) override
+    {
+        static_cast<void>(pButton);
+
+        // #EDF4FC
+        pDC->FillSolidRect(rect, RGB(0xED, 0xF4, 0xFC));
+
+        // #A8D2FD
+        CPen pen(PS_SOLID, 1, RGB(0xA8, 0xD2, 0xFD));
+        pDC->SelectObject(pen);
+        pDC->SelectStockObject(NULL_BRUSH);
+        pDC->Rectangle(rect);
+        clrText = GetSysColor(COLOR_MENUTEXT);
+    }
+
+    virtual void OnDrawMenuCheck(
+        CDC* pDC,
+        CMFCToolBarMenuButton* pButton,
+        CRect rect,
+        BOOL bHighlight,
+        BOOL bIsRadio)
+    {
+        static_cast<void>(pButton);
+        static_cast<void>(bHighlight);
+        static_cast<void>(bIsRadio);
+
+        rect.InflateRect(0, 1);
+
+        if (bHighlight)
+        {
+            // #C2DEFC
+            pDC->SelectStockObject(NULL_PEN);
+            pDC->FillSolidRect(rect, RGB(0xC2, 0xDE, 0xFC));
+
+            // #5FA2E6
+            CPen pen(PS_SOLID, 1, RGB(0x5F, 0xA2, 0xE6));
+            pDC->SelectObject(pen);
+            pDC->SelectStockObject(NULL_BRUSH);
+            pDC->Rectangle(rect);
+        }
+        else {
+            // #CEE5FC
+            pDC->SelectStockObject(NULL_PEN);
+            pDC->FillSolidRect(rect, RGB(0xCE, 0xE5, 0xFC));
+
+            // #64A5E6
+            CPen pen(PS_SOLID, 1, RGB(0x64, 0xA5, 0xE6));
+            pDC->SelectObject(pen);
+            pDC->SelectStockObject(NULL_BRUSH);
+            pDC->Rectangle(rect);
+        }
+
+        CSize size(m_uiElements.GetImageSize());
+        CRect imgRect(0, 0, size.cx, size.cy);
+
+        if ((pButton->m_nStyle & TBBS_DISABLED) == TBBS_DISABLED)
+        {
+            imgRect.OffsetRect(0, size.cy);
+        }
+
+        m_uiElements.DrawEx(pDC, rect, 0,CMFCToolBarImages::ImageAlignHorzCenter,
+            CMFCToolBarImages::ImageAlignVertCenter, imgRect);
     }
 
     // The ribbons tab at the top where the categories are
@@ -180,12 +276,6 @@ public:
         // the color of the ribbon
         pDC->FillSolidRect(rectPanel, m_clrWindows10Bar);
         pDC->FillSolidRect(rectCaption, m_clrWindows10Bar);
-
-        // draw the separator on the right hand side
-        //CPen pen(PS_SOLID, 1, GetSysColor(COLOR_3DLIGHT));
-        //pDC->SelectObject(pen);
-        //pDC->MoveTo(rectPanel.right - 1, rectPanel.top + 2);
-        //pDC->LineTo(rectPanel.right - 1, rectPanel.bottom);
 
         // This is the color of controls on the ribbon
         return GetSysColor(COLOR_WINDOWFRAME);
@@ -301,8 +391,6 @@ public:
         else {
             pDC->FillSolidRect(rectTab, GetSysColor(COLOR_WINDOW));
         }
-
-        CWnd *pTabWndCtrl = pTabWnd->GetTabWnd(iTab);
 
         CPen pen(PS_SOLID, 1, GetSysColor(COLOR_3DLIGHT));
         pDC->SelectObject(pen);
@@ -532,6 +620,15 @@ public:
         static_cast<void>(bIsPressed);
         static_cast<void>(bIsHighlighted);
         return;
+    }
+
+    virtual void OnFillRibbonQuickAccessToolBarPopup(
+        CDC* pDC,
+        CMFCRibbonPanelMenuBar* pMenuBar,
+        CRect rect)
+    {
+        static_cast<void>(pMenuBar);
+        pDC->FillSolidRect(rect, RGB(0xFF,0x00,0x00));
     }
 
 public:

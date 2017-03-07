@@ -9,6 +9,7 @@
 #define IDB_MAIN                        112
 #define IDB_BUTTONS                     113
 #define IDB_FILELARGE                   114
+#define IDB_FILELARGEA                  114
 #define IDB_FILESMALL                   115
 #define IDR_POPUP_EDIT                  119
 #define ID_STATUSBAR_PANE1              120
@@ -87,13 +88,14 @@
 #define ID_VIEW_APPLOOK_WINDOWS_10      220
 #define ID_VIEW_APPLOOK_OFFICE2016      221
 #define ID_VIEW_APPLOOK_RAINBOW         222
-
 #define IDS_BUILD_TAB                   300
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
+#define IDB_PNG1                        313
+#define IDB_UI_ELEMENTS                 313
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_BUTTON2                      32771
 #define ID_BUTTON3                      32772
@@ -108,12 +110,11 @@
 #define ID_PROGRESS2                    32783
 #define ID_SYSLINK2                     32784
 
-
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
+#define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32791
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
