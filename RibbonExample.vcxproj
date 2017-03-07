@@ -254,8 +254,10 @@
     <Image Include="res\ui_elements.png" />
     <Image Include="res\writelarge.bmp" />
     <Image Include="res\writesmall.bmp" />
+    <Image Include="VisualManager.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="res\ribbon.mfcribbon-ms" />
     <None Include="res\RibbonExample.rc2" />
   </ItemGroup>
