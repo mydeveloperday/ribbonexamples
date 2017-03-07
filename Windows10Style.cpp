@@ -11,7 +11,7 @@ CWindows10Style::CWindows10Style()
 
     CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
 
-    m_tabFaceBrush.CreateSolidBrush(GetSysColor(COLOR_HOTLIGHT));
+    m_tabFaceBrush.CreateSolidBrush(m_clrWindows10ApplicationButton);
     m_tabBlackBrush.CreateSolidBrush(GetSysColor(COLOR_WINDOWFRAME));
 }
 

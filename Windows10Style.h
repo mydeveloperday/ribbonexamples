@@ -47,8 +47,7 @@ public:
         CRect rectCategory)
     {
         static_cast<void>(pCategory);
-        CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-        pDC->FillRect(rectCategory, &brush);
+        pDC->FillSolidRect(rectCategory, m_clrWindows10Bar);
 
         CPen pen(PS_SOLID, 1, GetSysColor(COLOR_3DLIGHT));
         pDC->SelectObject(pen);
@@ -60,9 +59,68 @@ public:
         CDC* pDC,
         CMFCRibbonButton* pButton)
     {
-        CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-        pDC->FillRect(pButton->GetRect(), &brush);
-        return RGB(0xFF, 0xFF, 00);
+        pDC->FillSolidRect(pButton->GetRect(), m_clrWindows10Bar);
+        return RGB(0x00, 0xFF, 00);
+    }
+
+    virtual void OnDrawRibbonMainPanelButtonBorder(
+        CDC* pDC,
+        CMFCRibbonButton* pButton
+    )
+    {
+        pDC->SelectStockObject(BLACK_PEN);
+        pDC->SelectStockObject(NULL_BRUSH);
+        pDC->Rectangle(pButton->GetRect());
+    }
+
+    virtual void OnDrawRibbonMainPanelFrame(
+        CDC* pDC,
+        CMFCRibbonMainPanel* pPanel,
+        CRect rect
+    )
+    {
+        pDC->FillSolidRect(rect, m_clrWindows10Bar);
+    }
+
+    /*
+    virtual void OnFillRibbonMenuFrame(
+        CDC* pDC,
+        CMFCRibbonMainPanel* pPanel,
+        CRect rect)
+    {
+        pDC->FillSolidRect(pPanel->GetCommandsFrame(), RGB(0xFB, 0xFC, 0xFD));
+    }
+    */
+
+    virtual void OnDrawRibbonRecentFilesFrame(
+        CDC* pDC,
+        CMFCRibbonMainPanel* pPanel,
+        CRect rect)
+    {
+        pDC->FillSolidRect(rect, RGB(0xFF, 0, 0));
+    }
+
+    virtual COLORREF OnFillRibbonButton(
+        CDC* pDC,
+        CMFCRibbonButton* pButton)
+    {
+        if (pButton->GetParentPanel() && pButton->GetParentPanel()->IsKindOf(RUNTIME_CLASS(CMFCRibbonMainPanel)))
+        {
+            // RHS of recent files does not have large icons
+            if (pButton->IsLargeImage()) {
+                pDC->FillSolidRect(pButton->GetRect(), RGB(0xFB, 0xFC, 0xFD));
+                return GetSysColor(COLOR_WINDOWTEXT);
+            }
+        }
+        return GetSysColor(COLOR_WINDOWTEXT);
+    }
+
+    virtual COLORREF OnDrawMenuLabel(
+        CDC* pDC,
+        CRect rect)
+    {
+        pDC->FillSolidRect(rect, m_clrWindows10Bar);
+        return GetSysColor(COLOR_WINDOWTEXT);
     }
 
     // The ribbons tab at the top where the categories are
@@ -73,8 +131,7 @@ public:
     {
         // the background of the category tab
         if (bIsActive) {
-            CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-            pDC->FillRect(pTab->GetRect(), &brush);
+            pDC->FillSolidRect(pTab->GetRect(), m_clrWindows10Bar);
 
             CPen pen(PS_SOLID,1,GetSysColor(COLOR_3DLIGHT));
             pDC->SelectObject(pen);
@@ -83,7 +140,7 @@ public:
             pDC->LineTo(CPoint(pTab->GetRect().right-1, pTab->GetRect().top));
             pDC->LineTo(CPoint(pTab->GetRect().right-1, pTab->GetRect().bottom));
 
-            CPen pen2(PS_SOLID, 1, GetSysColor(COLOR_INACTIVEBORDER));
+            CPen pen2(PS_SOLID, 1, m_clrWindows10Bar);
             pDC->SelectObject(pen2);
             pDC->LineTo(CPoint(pTab->GetRect().left, pTab->GetRect().bottom));
         }
@@ -115,10 +172,8 @@ public:
     {
         static_cast<void>(pPanel);
         // the color of the ribbon
-        CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-        pDC->FillRect(rectPanel, &brush);
-
-        pDC->FillRect(rectCaption, &brush);
+        pDC->FillSolidRect(rectPanel, m_clrWindows10Bar);
+        pDC->FillSolidRect(rectCaption, m_clrWindows10Bar);
 
         // This is the color of controls on the ribbon
         return GetSysColor(COLOR_WINDOWFRAME);
@@ -130,8 +185,7 @@ public:
         CMFCRibbonPanel* pPanel,
         CRect rectCaption)
     {
-        CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-        pDC->FillRect(rectCaption,&brush);
+        pDC->FillSolidRect(rectCaption, m_clrWindows10Bar);
 
         CString str = pPanel->GetName();
 
@@ -223,8 +277,7 @@ public:
         const CMFCBaseTabCtrl* pTabWnd)
     {
         if (bIsActive) {
-            CBrush brush(GetSysColor(COLOR_INACTIVEBORDER));
-            pDC->FillRect(rectTab, &brush);
+            pDC->FillSolidRect(rectTab, m_clrWindows10Bar);
         }
         else {
             pDC->FillSolidRect(rectTab, GetSysColor(COLOR_WINDOW));
@@ -323,7 +376,7 @@ public:
     virtual COLORREF GetPropertyGridGroupColor(CMFCPropertyGridCtrl* pPropList)
     {
         static_cast<void>(pPropList);
-        return GetSysColor(COLOR_INACTIVEBORDER);
+        return m_clrWindows10Bar;
     }
 
     virtual void OnDrawCaptionBarInfoArea(
@@ -403,7 +456,6 @@ public:
         GetGlobalData()->clrInactiveBorder = ::GetSysColor(COLOR_INACTIVEBORDER);
 
         GetGlobalData()->clrInactiveCaptionText = ::GetSysColor(COLOR_INACTIVECAPTIONTEXT);
-        
         GetGlobalData()->brBtnFace.DeleteObject();
         GetGlobalData()->brBtnFace.CreateSolidBrush(GetGlobalData()->clrBtnFace);
 
@@ -433,14 +485,19 @@ public:
 
         GetGlobalData()->penBarShadow.DeleteObject();
         GetGlobalData()->penBarShadow.CreatePen(PS_SOLID, 1, afxGlobalData.clrBarShadow);
+
+        // Windows 10 ribbon color
+        m_clrWindows10Bar = RGB(0xF5, 0xF6, 0xF7);
+
+        // Windows 10 file menu application button color
+        m_clrWindows10ApplicationButton = RGB(0x19,0x79,0xCA);
     }
 
     virtual void OnDrawRibbonApplicationButton(
         CDC* pDC,
         CMFCRibbonButton* pButton)
     {
-        CBrush brush(GetSysColor(COLOR_HOTLIGHT));
-        pDC->FillRect(pButton->GetRect(), &brush);
+        pDC->FillSolidRect(pButton->GetRect(), m_clrWindows10ApplicationButton);
     }
 
     virtual void OnDrawDefaultRibbonImage(
@@ -477,5 +534,8 @@ private:
 
     CBrush m_tabFaceBrush;
     CBrush m_tabBlackBrush;
+
+    COLORREF    m_clrWindows10Bar;
+    COLORREF    m_clrWindows10ApplicationButton;
 };
 
