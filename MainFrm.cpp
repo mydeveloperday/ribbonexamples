@@ -17,6 +17,7 @@
 
 #include "MainFrm.h"
 #include "Windows10Style.h"
+#include "RainbowStyle.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -259,6 +260,14 @@ void CMainFrame::OnApplicationLook(UINT id)
 
     case ID_VIEW_APPLOOK_WINDOWS_10: {
         CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CWindows10Style));
+        CDockingManager::SetDockingMode(DT_SMART);
+        m_wndRibbonBar.SetWindows7Look(TRUE);
+        CSize sizeOfMainButton(56, 45);
+        m_wndRibbonBar.SetApplicationButton(&m_MainButton, sizeOfMainButton);
+    } break;
+
+    case ID_VIEW_APPLOOK_RAINBOW: {
+        CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CRainbowStyle));
         CDockingManager::SetDockingMode(DT_SMART);
         m_wndRibbonBar.SetWindows7Look(TRUE);
         CSize sizeOfMainButton(56, 45);

@@ -5,3 +5,5 @@ x64
 ReadMe.txt
 *.db
 *.opendb
+*.aps
+*.vs
