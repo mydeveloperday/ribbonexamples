@@ -62,7 +62,7 @@ IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
 
 IDB_MAIN                BITMAP                  "res\\main.bmp"
 
-IDB_FILELARGE           BITMAP                  "res\\filelarge.bmp"
+IDB_FILELARGEA          BITMAP                  "res\\filelarge.bmp"
 
 IDB_FILESMALL           BITMAP                  "res\\filesmall.bmp"
 
@@ -653,6 +653,14 @@ BEGIN
 END
 
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDB_FILELARGE           PNG                     "res\\filelarge.png"
 
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////

@@ -59,8 +59,12 @@ public:
         CDC* pDC,
         CMFCRibbonButton* pButton)
     {
-        pDC->FillSolidRect(pButton->GetRect(), m_clrWindows10Bar);
-        return RGB(0x00, 0xFF, 00);
+        CString text = pButton->GetText();
+        if (!text.IsEmpty()) {
+            pDC->FillSolidRect(pButton->GetRect(), m_clrWindows10Bar);
+            return GetSysColor(COLOR_WINDOWTEXT);
+        }
+        return RGB(0xFE,0xFE,0xFF);
     }
 
     virtual void OnDrawRibbonMainPanelButtonBorder(
@@ -68,9 +72,12 @@ public:
         CMFCRibbonButton* pButton
     )
     {
-        pDC->SelectStockObject(BLACK_PEN);
-        pDC->SelectStockObject(NULL_BRUSH);
-        pDC->Rectangle(pButton->GetRect());
+        CString text = pButton->GetText();
+        if (!text.IsEmpty()) {
+            pDC->SelectStockObject(BLACK_PEN);
+            pDC->SelectStockObject(NULL_BRUSH);
+            pDC->Rectangle(pButton->GetRect());
+        }
     }
 
     virtual void OnDrawRibbonMainPanelFrame(
@@ -82,15 +89,14 @@ public:
         pDC->FillSolidRect(rect, m_clrWindows10Bar);
     }
 
-    /*
     virtual void OnFillRibbonMenuFrame(
         CDC* pDC,
         CMFCRibbonMainPanel* pPanel,
         CRect rect)
     {
-        pDC->FillSolidRect(pPanel->GetCommandsFrame(), RGB(0xFB, 0xFC, 0xFD));
+        pDC->FillSolidRect(pPanel->GetRect(), RGB(0xFE, 0xFE, 0xFF));
     }
-    */
+
 
     virtual void OnDrawRibbonRecentFilesFrame(
         CDC* pDC,
@@ -175,6 +181,12 @@ public:
         pDC->FillSolidRect(rectPanel, m_clrWindows10Bar);
         pDC->FillSolidRect(rectCaption, m_clrWindows10Bar);
 
+        // draw the separator on the right hand side
+        //CPen pen(PS_SOLID, 1, GetSysColor(COLOR_3DLIGHT));
+        //pDC->SelectObject(pen);
+        //pDC->MoveTo(rectPanel.right - 1, rectPanel.top + 2);
+        //pDC->LineTo(rectPanel.right - 1, rectPanel.bottom);
+
         // This is the color of controls on the ribbon
         return GetSysColor(COLOR_WINDOWFRAME);
     }
@@ -204,6 +216,13 @@ public:
             pDC->DrawText(str, rectCaption, DT_SINGLELINE | DT_CENTER | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
             pDC->SetTextColor(clrTextOld);
         }
+
+        // draw the separator on the right hand side
+        CPen pen(PS_SOLID, 1, GetSysColor(COLOR_3DLIGHT));
+        pDC->SelectObject(pen);
+        CRect panelRect = pPanel->GetRect();
+        pDC->MoveTo(panelRect.right - 1, panelRect.top + 2);
+        pDC->LineTo(panelRect.right - 1, panelRect.bottom - 2);
     }
 
     // The color behind the category tabs
@@ -304,7 +323,7 @@ public:
 
 
         CString str;
-        pTabWndCtrl->GetWindowTextW(str);
+        pTabWnd->GetTabLabel(iTab, str);
 
         if (!str.IsEmpty())
         {
