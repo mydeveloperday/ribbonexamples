@@ -1,0 +1,7 @@
+*.user
+*.filters
+ipch
+x64
+ReadMe.txt
+*.db
+*.opendb
