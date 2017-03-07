@@ -662,6 +662,8 @@ END
 
 IDB_FILELARGE           PNG                     "res\\filelarge.png"
 
+IDB_UI_ELEMENTS         PNG                     "res\\ui_elements.png"
+
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 
